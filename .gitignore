@@ -1,1 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
+.idea/Gui-Amazon-Review.iml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/*
+__pycache__/
+build/
+dist/
