@@ -14,9 +14,10 @@ class Application(Frame):
 
     def window_init(self):
         self.master.title('Amazon评论获取工具   by 素笺 and 凌寒初见')
-        width, height = self.master.maxsize()
-        print(width, height)
+        # width, height = self.master.maxsize()
+        # print(width, height)
         # self.master.geometry("{}x{}".format(960, 540))
+        self.master.resizable(width=FALSE,height=FALSE)
 
     def createWidgets(self):
         # fm2
@@ -60,10 +61,22 @@ class Application(Frame):
         self.msg.config(state=NORMAL)
         self.msg.insert(END, '\n' + msg)
         self.msg.config(state=DISABLED)
+        self.msg.see(END)
+
+    def delete_msg(self):
+        self.msg.config(state=NORMAL)
+        self.msg.delete(0.0, END)
+        self.msg.config(state=DISABLED)
 
     def start(self):
+        self.delete_msg()
+        self.startButton.config(state=DISABLED)
         site = self.siteBox.get()
         asin = self.asinEntry.get()
+        if not asin:
+            self.write_msg('asin 为空，请先输入asin')
+            self.startButton.config(state=NORMAL)
+            return
         self.write_msg('开始任务...，站点--{}，Asin--{}'.format(site, asin))
         # aa = [{'aa': 3}, {'aa': 4}]
         # path = time.strftime("Amazon_Review_%Y_%m_%d_%H_%M.csv", time.localtime())
