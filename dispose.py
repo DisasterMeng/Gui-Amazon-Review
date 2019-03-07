@@ -22,6 +22,11 @@ class AmazonDispose:
             reviewDate = review.xpath('div/div/span[@data-hook="review-date"]//text()')
             reviewHref = review.xpath('div/div/div[2]/a[@data-hook="review-title"]/@href')
             reviewTitle = review.xpath('div/div/div[2]/a[@data-hook="review-title"]/span//text()')
+            reviewVP = review.xpath('div/div/div[3]/span/a/span[@data-hook="avp-badge"]')
+            if reviewVP and len(reviewVP) > 0:
+                reviewVP = 'vp'
+            else:
+                reviewVP = '非vp'
             reviewBuyer = review.xpath('div/div/div[@data-hook="genome-widget"]/a/@href')
             reviewBuyerName = \
                 review.xpath('div/div/div[@data-hook="genome-widget"]/a/div[@class="a-profile-content"]/span//text()')
@@ -37,6 +42,7 @@ class AmazonDispose:
             reviewRow['date'] = self.getData(reviewDate)
             reviewRow['href'] = self.getURLData(reviewHref)
             reviewRow['title'] = self.getData(reviewTitle)
+            reviewRow['vp'] = reviewVP
             reviewRow['buyer'] = self.getURLData(reviewBuyer)
             reviewRow['name'] = self.getData(reviewBuyerName)
             reviewRow['stars'] = reviewStars

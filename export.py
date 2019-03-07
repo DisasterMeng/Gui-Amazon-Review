@@ -2,7 +2,7 @@ import os, time, csv
 
 from utils import getDesktopPath
 
-NEED = ('asin', 'name', 'date', 'stars', 'title', 'content', 'href', 'buyer')
+NEED = ('asin', 'name', 'date', 'stars', 'title', 'vp', 'content', 'href', 'buyer')
 FILENAME = "Amazon_{asin}_Review_%Y_%m_%d_%H_%M.csv"
 
 
@@ -11,7 +11,7 @@ class JsonCsv:
         self.ASIN = ASIN
         self.csvFile = open(self.getPath(), 'w', newline='', encoding='utf-8-sig')
         self.writer = csv.writer(self.csvFile)
-        self.writer.writerow(['ASIN', '评价人', '日期', '星级', '标题', '内容', '评论链接', '买家链接'])
+        self.writer.writerow(['ASIN', '评价人', '日期', '星级', '标题', '是否vp','内容', '评论链接', '买家链接'])
 
     def getPath(self):
         name = time.strftime(FILENAME.format(asin=self.disposeASIN()), time.localtime())
