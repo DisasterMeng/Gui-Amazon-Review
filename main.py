@@ -23,9 +23,6 @@ class Application(Frame):
 
     def window_init(self):
         self.master.title('Amazon评论获取工具   by 素笺 and 凌寒初见')
-        # width, height = self.master.maxsize()
-        # print(width, height)
-        # self.master.geometry("{}x{}".format(960, 540))
         self.master.resizable(width=FALSE,height=FALSE)
 
     def createWidgets(self):
