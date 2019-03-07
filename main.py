@@ -116,8 +116,9 @@ class Application(Frame):
         else:
             self.write_msg('没有数据可以写入')
         if dispose.isNextPage():
-            self.write_msg('准备请求下一页数据')
-            time.sleep(random.randint(5, 10))
+            randomTime = random.randint(5, 10)
+            self.write_msg('等待%s请求下一页数据' % randomTime)
+            time.sleep(randomTime)
             self.requests.nextPage()
             self.start_download()
         else:

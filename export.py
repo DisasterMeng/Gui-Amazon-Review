@@ -14,7 +14,7 @@ class JsonCsv:
         self.writer.writerow(['ASIN', '评价人', '日期', '星级', '标题', '内容', '评论链接', '买家链接'])
 
     def getPath(self):
-        name = time.strftime(FILENAME.format(asin=self.ASIN), time.localtime())
+        name = time.strftime(FILENAME.format(asin=self.disposeASIN()), time.localtime())
         return os.path.join(getDesktopPath(), name)
 
     def writerCsv(self, dicData):
@@ -26,3 +26,6 @@ class JsonCsv:
 
     def closeCsv(self):
         self.csvFile.close()
+
+    def disposeASIN(self):
+        return self.ASIN.replace(' ', '').strip('\n')
