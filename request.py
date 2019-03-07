@@ -11,6 +11,7 @@ class AmazonRequests:
         self.ASIN = ASIN
         self.Country = Country
         self.page = 1
+        self.retryNum = 0
         self.headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
             "user-agent": UserAgent().random,
@@ -26,10 +27,21 @@ class AmazonRequests:
     def nextPage(self):
         self.page += 1
 
+    def getPage(self):
+        return self.page
+
     def getAmaoznData(self):
         try:
             response = requests.get(self.getURL(), headers=self.headers, timeout=(5, 10))
             response.encoding = 'utf-8'
-            return response.text
+            if response.status_code == 200:
+                return response.text
+            else:
+                return response.status_code
+            self.retryNum = 0
         except requests.exceptions.RequestException as e:
-            print(e)
+            if self.retryNum == 2:
+                print(e)
+                return self.retryNum
+            self.retryNum += 1
+            return self.getAmaoznData()
