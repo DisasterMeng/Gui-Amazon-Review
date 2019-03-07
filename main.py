@@ -2,10 +2,12 @@ from tkinter import *
 from tkinter import ttk
 import random
 import time
+import threading
 
 from export import JsonCsv
 from request import AmazonRequests
 from dispose import AmazonDispose
+
 
 
 class Application(Frame):
@@ -88,7 +90,10 @@ class Application(Frame):
         self.requests = AmazonRequests(site, asin)
         # 判断asin是否存在
         if asin:
-            self.start_download()
+            # self.start_download()
+            t = threading.Thread(target=self.start_download())
+            t.setDaemon(True)
+            t.start()
         else:
             self.write_msg('asin不存在，请查看是否输入有误')
             self.startButton.config(state=NORMAL)
@@ -97,6 +102,7 @@ class Application(Frame):
         # 解析数据 并存储数据
         dispose = AmazonDispose(self.requests.getAmaoznData(), self.siteBox.get(), self.asinEntry.get())
         dicData = dispose.dispose()
+        self.write_msg(str(dicData))
         if dicData:
             self.csv.writerCsv(dicData)
         if dispose.isNextPage():
