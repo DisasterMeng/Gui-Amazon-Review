@@ -1,12 +1,11 @@
-# from request import AmazonRequests
 from dispose import AmazonDispose
 
 
 def test():
     with open('amazon.txt', 'rb') as f:
         data = f.read()
-        dispose = AmazonDispose(data)
-        dispose.dispose()
+        dispose = AmazonDispose(data, 'B076MP43X5', 'US')
+        print(dispose.isNextPage())
     pass
 
 

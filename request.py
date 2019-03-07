@@ -27,10 +27,9 @@ class AmazonRequests:
         self.page += 1
 
     def getAmaoznData(self):
-        response = requests.get(self.getURL(), headers=self.headers)
-        response.encoding = 'utf-8'
-        return response.text
-
-    def isASIN(self, ASIN):
-        if ASIN:
-            return ASIN
+        try:
+            response = requests.get(self.getURL(), headers=self.headers, timeout=(5, 10))
+            response.encoding = 'utf-8'
+            return response.text
+        except requests.exceptions.RequestException as e:
+            print(e)

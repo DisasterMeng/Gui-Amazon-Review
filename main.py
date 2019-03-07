@@ -1,8 +1,11 @@
 from tkinter import *
 from tkinter import ttk
+import random
 import time
 
-import export
+from export import JsonCsv
+from request import AmazonRequests
+from dispose import AmazonDispose
 
 
 class Application(Frame):
@@ -12,6 +15,8 @@ class Application(Frame):
         self.window_init()
         self.createWidgets()
         self.data = []
+        self.requests = ''
+        self.csv = JsonCsv()
 
     def window_init(self):
         self.master.title('Amazon评论获取工具   by 素笺 and 凌寒初见')
@@ -79,29 +84,28 @@ class Application(Frame):
             self.startButton.config(state=NORMAL)
             return
         self.write_msg('开始任务...，站点--{}，Asin--{}'.format(site, asin))
-        # aa = [{'aa': 3}, {'aa': 4}]
-        # path = time.strftime("Amazon_Review_%Y_%m_%d_%H_%M.csv", time.localtime())
-        # export.json_2_csv(aa, path)
         #初始化请求类
-
+        self.requests = AmazonRequests(site, asin)
         # 判断asin是否存在
-        if True:
+        if asin:
             self.start_download()
         else:
             self.write_msg('asin不存在，请查看是否输入有误')
             self.startButton.config(state=NORMAL)
 
     def start_download(self):
-        pass
         # 解析数据 并存储数据
-
-        # 如果存在下一页 修改请求头 然后递归请求
-        if True:
+        dispose = AmazonDispose(self.requests.getAmaoznData(), self.siteBox.get(), self.asinEntry.get())
+        dicData = dispose.dispose()
+        if dicData:
+            self.csv.writerCsv(dicData)
+        if dispose.isNextPage():
+            time.sleep(random.randint(5, 10))
             self.start_download()
         else:
-            self.write_msg('评论获取完毕，共获取多少条')
+            self.csv.closeCsv()
+            self.write_msg('评论获取完毕')
             self.startButton.config(state=NORMAL)
-
 
 
 if __name__ == '__main__':
