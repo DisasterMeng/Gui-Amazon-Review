@@ -62,6 +62,6 @@ class AmazonDispose:
 
     def getURLData(self, data):
         if data and len(data) >0:
-            return '%s%s' %(getAmazonDomain(self.Country), data[0])
+            return '%s%s' % (getAmazonDomain(self.Country), data[0])
         else:
             return ''

@@ -8,6 +8,7 @@ REVIEWSURL = '{domain}/product-reviews/{asin}?reviewerType=all_reviews&pageNumbe
 
 class AmazonRequests:
     def __init__(self, Country, ASIN):
+        self.session = requests.Session()
         self.ASIN = ASIN
         self.Country = Country
         self.page = 1
@@ -32,7 +33,7 @@ class AmazonRequests:
 
     def getAmaoznData(self):
         try:
-            response = requests.get(self.getURL(), headers=self.headers, timeout=(5, 10))
+            response = self.session.get(self.getURL(), headers=self.headers, timeout=(5, 10))
             response.encoding = 'utf-8'
             if response.status_code == 200:
                 return response.text

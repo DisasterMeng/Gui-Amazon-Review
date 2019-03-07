@@ -89,8 +89,8 @@ class Application(Frame):
         self.write_msg('开始任务...，站点--{}，Asin--{}'.format(site, asin))
         #初始化请求类
         self.requests = AmazonRequests(site, asin)
-        self.csv = JsonCsv()
-        t = threading.Thread(target=self.start_download())
+        self.csv = JsonCsv(asin)
+        t = threading.Thread(target=self.start_download)
         t.setDaemon(True)
         t.start()
 
@@ -109,7 +109,7 @@ class Application(Frame):
         self.write_msg('正在解析数据')
         dispose = AmazonDispose(amazonData, self.siteBox.get(), self.asinEntry.get())
         dicData = dispose.dispose()
-        self.write_msg(str(dicData))
+        # self.write_msg(str(dicData))
         if dicData:
             self.write_msg('写入数据')
             self.csv.writerCsv(dicData)
