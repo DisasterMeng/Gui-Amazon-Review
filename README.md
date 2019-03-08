@@ -15,6 +15,8 @@
 
 最后建议一下，简单的页面可以是用tkinter，复杂可以使用其他Gui库，比如pyqt，tkinter实现复杂的页面有点费劲。
 
+下载地址[https://github.com/sujianqingfeng/Gui-Amazon-Review/releases/download/0.1/AmazonReview_0.1.exe](https://github.com/sujianqingfeng/Gui-Amazon-Review/releases/download/0.1/AmazonReview_0.1.exe)
+
 源码地址[https://github.com/sujianqingfeng/Gui-Amazon-Review](https://github.com/sujianqingfeng/Gui-Amazon-Review)，求星星😊
 
 ![结果](./screenshot/result.png)
