@@ -3,7 +3,14 @@ from fake_useragent import UserAgent
 
 from utils import getAmazonDomain
 
-REVIEWSURL = '{domain}/product-reviews/{asin}?reviewerType=all_reviews&pageNumber={page}'
+REVIEWSURL = '{domain}/product-reviews/{asin}/ref=cm_cr_arp_d_viewopt_srt'
+
+reviewParam = {
+    'ie': 'UTF8',
+    'reviewerType': 'all_reviews',
+    'sortBy': 'recent',
+    'pageNumber': ''
+}
 
 
 class AmazonRequests:
@@ -23,7 +30,7 @@ class AmazonRequests:
         }
 
     def getURL(self):
-        return REVIEWSURL.format(domain=getAmazonDomain(self.Country), asin=self.ASIN, page=self.page)
+        return REVIEWSURL.format(domain=getAmazonDomain(self.Country), asin=self.ASIN)
 
     def nextPage(self):
         self.page += 1
@@ -33,7 +40,8 @@ class AmazonRequests:
 
     def getAmaoznData(self):
         try:
-            response = self.session.get(self.getURL(), headers=self.headers, timeout=(5, 10))
+            reviewParam['pageNumber'] = self.page
+            response = self.session.get(self.getURL(), params=reviewParam, headers=self.headers, timeout=(5, 10))
             response.encoding = 'utf-8'
             if response.status_code == 200:
                 return response.text
