@@ -3,7 +3,7 @@ from fake_useragent import UserAgent
 
 from utils import getAmazonDomain
 
-REVIEWSURL = '{domain}/product-reviews/{asin}?reviewerType=all_reviews&pageNumber={page}&sortBy=recent&pageSize=50'
+REVIEWSURL = '{domain}/product-reviews/{asin}?reviewerType=all_reviews&pageNumber={page}'
 
 
 class AmazonRequests:
@@ -14,11 +14,11 @@ class AmazonRequests:
         self.page = 1
         self.retryNum = 0
         self.headers = {
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,\
+                      application/signed-exchange;v=b3",
             "user-agent": UserAgent().random,
             "accept-encoding": "gzip, deflate, br",
             "accept-language": "zh-CN,zh;q=0.9",
-            "Cache-Control": "max-age=0",
             "upgrade-insecure-requests": "1"
         }
 

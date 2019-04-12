@@ -10,7 +10,6 @@ from dispose import AmazonDispose
 from utils import is_number
 
 
-
 class Application(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
@@ -105,13 +104,16 @@ class Application(Frame):
             return
         self.write_msg('正在解析数据')
         dispose = AmazonDispose(amazonData, self.siteBox.get(), self.asinEntry.get())
-        dicData = dispose.dispose()
-        # self.write_msg(str(dicData))
-        if dicData:
-            self.write_msg('写入数据')
-            self.csv.writerCsv(dicData)
+        if dispose.isRobot():
+            self.write_msg('机器人验证')
         else:
-            self.write_msg('没有数据可以写入')
+            dicData = dispose.dispose()
+            # self.write_msg(str(dicData))
+            if dicData:
+                self.write_msg('写入数据')
+                self.csv.writerCsv(dicData)
+            else:
+                self.write_msg('没有数据可以写入')
         if dispose.isNextPage():
             randomTime = random.randint(5, 10)
             self.write_msg('等待%s秒请求下一页数据' % randomTime)

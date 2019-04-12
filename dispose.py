@@ -71,3 +71,9 @@ class AmazonDispose:
             return '%s%s' % (getAmazonDomain(self.Country), data[0])
         else:
             return ''
+
+    def isRobot(self):
+        robot = self.selector.xpath('//form[@action="/errors/validateCaptcha"]')
+        if robot:
+            return True
+        return False

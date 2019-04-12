@@ -4,7 +4,8 @@
 .idea/misc.xml
 .idea/modules.xml
 .idea/workspace.xml
-.idea/*
+.idea/
 __pycache__/
 build/
 dist/
+.vscode/
