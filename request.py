@@ -11,6 +11,7 @@ reviewParam = {
     'sortBy': 'recent',
     'pageNumber': ''
 }
+# 'filterByLanguage': 'en_US',
 
 
 class AmazonRequests:
@@ -21,8 +22,8 @@ class AmazonRequests:
         self.page = 1
         self.retryNum = 0
         self.headers = {
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,\
-                      application/signed-exchange;v=b3",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;\
+                        q=0.8,application/signed-exchange;v=b3",
             "user-agent": UserAgent().random,
             "accept-encoding": "gzip, deflate, br",
             "accept-language": "zh-CN,zh;q=0.9",
@@ -40,7 +41,9 @@ class AmazonRequests:
 
     def getAmaoznData(self):
         try:
-            reviewParam['pageNumber'] = self.page
+            reviewParam['pageNumber'] = str(self.getPage())
+            if self.Country == 'US':
+                reviewParam['filterByLanguage'] = 'en_US'
             response = self.session.get(self.getURL(), params=reviewParam, headers=self.headers, timeout=(5, 10))
             response.encoding = 'utf-8'
             if response.status_code == 200:

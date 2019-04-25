@@ -93,31 +93,32 @@ class Application(Frame):
     def start_download(self):
         # 解析数据 并存储数据
         # 判断asin是否存在
-        amazonData = self.requests.getAmaoznData()
+        amazon_data = self.requests.getAmaoznData()
         self.write_msg('正在获取第{}页'.format(self.requests.getPage()))
-        if amazonData and is_number(amazonData):
-            if amazonData == 404:
+        if amazon_data and is_number(amazon_data):
+            if amazon_data == 404:
                 self.write_msg('asin不存在，请查看是否输入有误')
-            if amazonData == 2:
+            if amazon_data == 2:
                 self.write_msg('请求失败')
             self.startButton.config(state=NORMAL)
             return
+        # print(amazon_data)
         self.write_msg('正在解析数据')
-        dispose = AmazonDispose(amazonData, self.siteBox.get(), self.asinEntry.get())
+        dispose = AmazonDispose(amazon_data, self.siteBox.get(), self.asinEntry.get())
         if dispose.isRobot():
             self.write_msg('机器人验证')
         else:
-            dicData = dispose.dispose()
-            # self.write_msg(str(dicData))
-            if dicData:
+            dic_data = dispose.dispose()
+            # self.write_msg(str(dic_data))
+            if dic_data:
                 self.write_msg('写入数据')
-                self.csv.writerCsv(dicData)
+                self.csv.writerCsv(dic_data)
             else:
                 self.write_msg('没有数据可以写入')
         if dispose.isNextPage():
-            randomTime = random.randint(5, 10)
-            self.write_msg('等待%s秒请求下一页数据' % randomTime)
-            time.sleep(randomTime)
+            random_time = random.randint(5, 10)
+            self.write_msg('等待%s秒请求下一页数据' % random_time)
+            time.sleep(random_time)
             self.requests.nextPage()
             self.start_download()
         else:
