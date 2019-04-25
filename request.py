@@ -11,7 +11,6 @@ reviewParam = {
     'sortBy': 'recent',
     'pageNumber': ''
 }
-# 'filterByLanguage': 'en_US',
 
 
 class AmazonRequests:
