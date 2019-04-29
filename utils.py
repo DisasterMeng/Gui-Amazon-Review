@@ -15,6 +15,11 @@ RESOURCE = {
     "GB": "https://www.amazon.co.uk"
 }
 
+LANG_CODE = {
+    "CN": 'zh_CN',
+    "US": 'en_US'
+}
+
 
 def getAmazonDomain(country):
     return RESOURCE[country.upper()]

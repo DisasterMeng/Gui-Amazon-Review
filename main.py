@@ -90,10 +90,10 @@ class Application(Frame):
         t.setDaemon(True)
         t.start()
 
-    def start_download(self):
+    def start_download(self, is_lang=False):
         # 解析数据 并存储数据
         # 判断asin是否存在
-        amazon_data = self.requests.getAmaoznData()
+        amazon_data = self.requests.getAmaoznData(is_lang)
         self.write_msg('正在获取第{}页'.format(self.requests.getPage()))
         if amazon_data and is_number(amazon_data):
             if amazon_data == 404:
@@ -102,29 +102,37 @@ class Application(Frame):
                 self.write_msg('请求失败')
             self.startButton.config(state=NORMAL)
             return
-        # print(amazon_data)
         self.write_msg('正在解析数据')
         dispose = AmazonDispose(amazon_data, self.siteBox.get(), self.asinEntry.get())
-        if dispose.isRobot():
+        if dispose.is_robot():
             self.write_msg('机器人验证')
+            self.startButton.config(state=NORMAL)
+            return
+        if dispose.is_lang():
+            self.write_msg('语言不符合, 重新请求')
+            self.wait('重新请求')
+            self.start_download(True)
+            return
+        dic_data = dispose.dispose()
+        # self.write_msg(str(dic_data))
+        if dic_data:
+            self.write_msg('写入数据')
+            self.csv.writerCsv(dic_data)
         else:
-            dic_data = dispose.dispose()
-            # self.write_msg(str(dic_data))
-            if dic_data:
-                self.write_msg('写入数据')
-                self.csv.writerCsv(dic_data)
-            else:
-                self.write_msg('没有数据可以写入')
+            self.write_msg('没有数据可以写入')
         if dispose.isNextPage():
-            random_time = random.randint(5, 10)
-            self.write_msg('等待%s秒请求下一页数据' % random_time)
-            time.sleep(random_time)
+            self.wait('请求下一页')
             self.requests.nextPage()
             self.start_download()
         else:
             self.csv.closeCsv()
             self.write_msg('评论获取完毕')
             self.startButton.config(state=NORMAL)
+
+    def wait(self, msg):
+        random_time = random.randint(5, 10)
+        self.write_msg('等待%s秒,%s' % (random_time, msg))
+        time.sleep(random_time)
 
 
 if __name__ == '__main__':

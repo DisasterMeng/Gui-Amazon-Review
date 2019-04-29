@@ -1,7 +1,7 @@
 import re
 from lxml import etree
 
-from utils import getAmazonDomain
+from utils import getAmazonDomain, LANG_CODE
 
 STARS = r'(\d+)'
 
@@ -72,8 +72,19 @@ class AmazonDispose:
         else:
             return ''
 
-    def isRobot(self):
+    def is_robot(self):
         robot = self.selector.xpath('//form[@action="/errors/validateCaptcha"]')
         if robot:
             return True
+        return False
+
+    def is_lang(self):
+        lang = self.selector.xpath('//select[@id="language-type-dropdown"]')
+        if len(lang) <= 0:
+            return False
+        for item in lang:
+            param = item.xpath('option[@selected]/@value')
+        for (key, value) in LANG_CODE.items():
+            if value == self.getData(param) and key == 'CN':
+                return True
         return False

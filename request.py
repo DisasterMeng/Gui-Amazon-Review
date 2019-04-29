@@ -38,16 +38,17 @@ class AmazonRequests:
     def getPage(self):
         return self.page
 
-    def getAmaoznData(self):
+    def getAmaoznData(self, is_lang=False):
         try:
             reviewParam['pageNumber'] = str(self.getPage())
-            if self.Country == 'US':
+            if is_lang and self.Country == 'US':
                 reviewParam['filterByLanguage'] = 'en_US'
             response = self.session.get(self.getURL(), params=reviewParam, headers=self.headers, timeout=(5, 10))
             response.encoding = 'utf-8'
             if response.status_code == 200:
                 return response.text
             else:
+                print(response.text)
                 return response.status_code
             self.retryNum = 0
         except requests.exceptions.RequestException as e:
