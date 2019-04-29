@@ -19,10 +19,11 @@ class Application(Frame):
         self.data = []
         self.requests = ''
         self.csv = ''
+        self.is_lang = False
 
     def window_init(self):
         self.master.title('Amazon评论获取工具   by 素笺 and 凌寒初见')
-        self.master.resizable(width=FALSE,height=FALSE)
+        self.master.resizable(width=FALSE, height=FALSE)
 
     def createWidgets(self):
         # fm2
@@ -74,6 +75,7 @@ class Application(Frame):
         self.msg.config(state=DISABLED)
 
     def start(self):
+        self.is_lang = False
         self.delete_msg()
         self.startButton.config(state=DISABLED)
         site = self.siteBox.get()
@@ -90,10 +92,10 @@ class Application(Frame):
         t.setDaemon(True)
         t.start()
 
-    def start_download(self, is_lang=False):
+    def start_download(self):
         # 解析数据 并存储数据
         # 判断asin是否存在
-        amazon_data = self.requests.getAmaoznData(is_lang)
+        amazon_data = self.requests.getAmaoznData(self.is_lang)
         self.write_msg('正在获取第{}页'.format(self.requests.getPage()))
         if amazon_data and is_number(amazon_data):
             if amazon_data == 404:
@@ -109,9 +111,10 @@ class Application(Frame):
             self.startButton.config(state=NORMAL)
             return
         if dispose.is_lang():
+            self.is_lang = True
             self.write_msg('语言不符合, 重新请求')
             self.wait('重新请求')
-            self.start_download(True)
+            self.start_download()
             return
         dic_data = dispose.dispose()
         # self.write_msg(str(dic_data))
