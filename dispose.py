@@ -4,6 +4,7 @@ from lxml import etree
 from utils import getAmazonDomain, LANG_CODE
 
 STARS = r'(\d+)'
+HELPFUL = r'(\d+)'
 
 
 class AmazonDispose:
@@ -37,7 +38,15 @@ class AmazonDispose:
                 reviewStars = reviewStars.group(1)
             else:
                 reviewStars = ''
+            reviewHelpful = review.xpath('div/div/div[5]/div/span[@data-hook="review-voting-widget"]'
+                                         '/div/span[@data-hook="helpful-vote-statement"]//text()')
+            reviewHelpful = re.search(HELPFUL, self.getData(reviewHelpful))
+            if reviewHelpful:
+                reviewHelpful = reviewHelpful.group(1)
+            else:
+                reviewHelpful = 0
             reviewContent = review.xpath('div/div/div[4]/span[@data-hook="review-body"]//text()')
+            # data-hook="helpful-vote-statement"
             reviewRow['asin'] = self.ASIN
             reviewRow['date'] = self.getData(reviewDate)
             reviewRow['href'] = self.getURLData(reviewHref)
@@ -47,6 +56,7 @@ class AmazonDispose:
             reviewRow['name'] = self.getData(reviewBuyerName)
             reviewRow['stars'] = reviewStars
             reviewRow['content'] = self.getData(reviewContent)
+            reviewRow['helpful'] = reviewHelpful
             reviewAll.append(reviewRow)
         return reviewAll
 
