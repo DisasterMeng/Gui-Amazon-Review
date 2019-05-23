@@ -117,6 +117,7 @@ class Application(Frame):
             self.start_download()
             return
         dic_data = dispose.dispose()
+        print(dic_data)
         # self.write_msg(str(dic_data))
         if dic_data:
             self.write_msg('写入数据')

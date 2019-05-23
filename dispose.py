@@ -46,7 +46,7 @@ class AmazonDispose:
             else:
                 reviewHelpful = 0
             reviewContent = review.xpath('div/div/div[4]/span[@data-hook="review-body"]//text()')
-            # data-hook="helpful-vote-statement"
+            print(self.getData(reviewTitle))
             reviewRow['asin'] = self.ASIN
             reviewRow['date'] = self.getData(reviewDate)
             reviewRow['href'] = self.getURLData(reviewHref)
@@ -72,7 +72,7 @@ class AmazonDispose:
 
     def getData(self, data):
         if data and len(data) > 0:
-            return data[0]
+            return ''.join(data).strip().replace('\n', '')
         else:
             return ''
 
