@@ -7,7 +7,7 @@ import threading
 from export import JsonCsv
 from request import AmazonRequests
 from dispose import AmazonDispose
-from utils import is_number
+from utils import is_number, RESOURCE
 
 
 class Application(Frame):
@@ -36,9 +36,9 @@ class Application(Frame):
         self.siteLabel = Label(self.fm2_left_top, text='站点')
         self.siteLabel.pack(side=LEFT, padx=10)
 
-        self.siteBox = ttk.Combobox(self.fm2_left_top, state='readonly',width=17)
+        self.siteBox = ttk.Combobox(self.fm2_left_top, state='readonly', width=17)
         self.siteBox.pack(side=LEFT)
-        self.siteBox['value'] = ('US', 'JP', 'FR', 'ES', 'IT', 'MX', 'GB', 'UK', 'CA', 'DE', 'IN')
+        self.siteBox['value'] = list(RESOURCE.keys())
         self.siteBox.current(0)
         self.fm2_left_top.pack(side=TOP, pady=5)
 

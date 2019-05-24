@@ -1,7 +1,8 @@
 import re
+import time
 from lxml import etree
 
-from utils import getAmazonDomain, LANG_CODE
+from utils import getAmazonDomain, LANG_CODE, TIME_CODE, STANDARD_TIME
 
 STARS = r'(\d+)'
 HELPFUL = r'(\d+)'
@@ -46,9 +47,9 @@ class AmazonDispose:
             else:
                 reviewHelpful = 0
             reviewContent = review.xpath('div/div/div[4]/span[@data-hook="review-body"]//text()')
-            print(self.getData(reviewTitle))
+            #print(self.get_date(reviewDate))
             reviewRow['asin'] = self.ASIN
-            reviewRow['date'] = self.getData(reviewDate)
+            reviewRow['date'] = self.get_date(reviewDate)
             reviewRow['href'] = self.getURLData(reviewHref)
             reviewRow['title'] = self.getData(reviewTitle)
             reviewRow['vp'] = reviewVP
@@ -81,6 +82,22 @@ class AmazonDispose:
             return '%s%s' % (getAmazonDomain(self.Country), data[0])
         else:
             return ''
+
+    def get_date(self, data):
+        date = self.getData(data)
+        try:
+            date = date.replace(' ', '')
+            time_format = TIME_CODE[self.Country]
+            if type(time_format) == dict:
+                if 'replace' in time_format:
+                    date = date.replace(time_format['replace'], '')
+                for item in time_format['MapMonth']:
+                    date = date.replace(item, time_format['MapMonth'][item])
+                time_format = time_format['format']
+            time_struct = time.strptime(date, time_format)
+            return time.strftime(STANDARD_TIME, time_struct)
+        except [TypeError, ValueError, SyntaxError]:
+            return date
 
     def is_robot(self):
         robot = self.selector.xpath('//form[@action="/errors/validateCaptcha"]')
