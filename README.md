@@ -17,6 +17,6 @@
 
 下载地址[https://github.com/DisasterMeng/Gui-Amazon-Review/releases/download/0.7/Amazon-Review_0.7.exe](https://github.com/DisasterMeng/Gui-Amazon-Review/releases/download/0.7/Amazon-Review_0.7.exe)
 
-源码地址[https://github.com/sujianqingfeng/Gui-Amazon-Review](https://github.com/sujianqingfeng/Gui-Amazon-Review)，求星星😊
+源码地址[https://github.com/DisasterMeng/Gui-Amazon-Review](https://github.com/DisasterMeng/Gui-Amazon-Review)，求星星😊
 
 ![结果](./screenshot/result.png)

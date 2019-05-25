@@ -14,10 +14,10 @@ reviewParam = {
 
 
 class AmazonRequests:
-    def __init__(self, Country, ASIN):
+    def __init__(self, country, asin):
         self.session = requests.Session()
-        self.ASIN = ASIN
-        self.Country = Country
+        self.ASIN = asin
+        self.Country = country
         self.page = 1
         self.retryNum = 0
         self.headers = {
