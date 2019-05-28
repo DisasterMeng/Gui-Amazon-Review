@@ -50,7 +50,6 @@ class AmazonRequests:
             else:
                 print(response.text)
                 return response.status_code
-            self.retryNum = 0
         except requests.exceptions.RequestException as e:
             if self.retryNum == 2:
                 print(e)

@@ -2,14 +2,14 @@ import os, time, csv
 
 from utils import getDesktopPath
 
-NEED = ('asin', 'name', 'vp', 'date', 'stars', 'title', 'content', 'href', 'buyer', 'helpful')
-NEEDDOC = ('ASIN', '评价人', '是否vp', '日期', '星级', '标题', '内容', '评论链接', '买家链接', '点赞数')
+NEED = ('asin', 'name', 'format', 'vp', 'date', 'stars', 'title', 'content', 'href', 'buyer', 'helpful')
+NEEDDOC = ('ASIN', '评价人', '格式条', '是否vp', '日期', '星级', '标题', '内容', '评论链接', '买家链接', '点赞数')
 FILENAME = "Amazon_{asin}_Review_%Y_%m_%d_%H_%M.csv"
 
 
 class JsonCsv:
-    def __init__(self, ASIN):
-        self.ASIN = ASIN
+    def __init__(self, asin):
+        self.ASIN = asin
         self.csvFile = open(self.getPath(), 'w', newline='', encoding='utf-8-sig')
         self.writer = csv.writer(self.csvFile)
         self.writer.writerow(NEEDDOC)

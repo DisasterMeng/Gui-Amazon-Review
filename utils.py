@@ -19,8 +19,8 @@ RESOURCE = {
 }
 
 LANG_CODE = {
-    "CN": 'zh_CN',
-    "US": 'en_US'
+    'CN': 'zh_CN',
+    'US': 'en_US'
 }
 
 FR_MONTH = {
@@ -103,8 +103,10 @@ TIME_CODE = {
 
 STANDARD_TIME = '%d-%b-%y'
 
+
 def getAmazonDomain(country):
     return RESOURCE[country.upper()]
+
 
 def getDesktopPath():
     key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')

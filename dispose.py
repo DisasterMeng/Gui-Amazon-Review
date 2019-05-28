@@ -24,8 +24,10 @@ class AmazonDispose:
             reviewDate = review.xpath('div/div/span[@data-hook="review-date"]//text()')
             reviewHref = review.xpath('div/div/div[2]/a[@data-hook="review-title"]/@href')
             reviewTitle = review.xpath('div/div/div[2]/a[@data-hook="review-title"]/span//text()')
+            reviewStrip = review.xpath('div/div/div[3]/a[@data-hook="format-strip"]//text()')
+            print(reviewStrip)
             reviewVP = review.xpath('div/div/div[3]/span/a/span[@data-hook="avp-badge"]')
-            if reviewVP and len(reviewVP) > 0:
+            if reviewVP:
                 reviewVP = 'vp'
             else:
                 reviewVP = '非vp'
@@ -52,6 +54,7 @@ class AmazonDispose:
             reviewRow['date'] = self.get_date(reviewDate)
             reviewRow['href'] = self.getURLData(reviewHref)
             reviewRow['title'] = self.getData(reviewTitle)
+            reviewRow['format'] = self.getData(reviewStrip)
             reviewRow['vp'] = reviewVP
             reviewRow['buyer'] = self.getURLData(reviewBuyer)
             reviewRow['name'] = self.getData(reviewBuyerName)
@@ -62,9 +65,9 @@ class AmazonDispose:
         return reviewAll
 
     def isNextPage(self):
-        nextPage = self.selector.xpath('//li[contains(@class, "a-last")]/@class')
-        if nextPage and len(nextPage) > 0:
-            if 'a-disabled' in nextPage:
+        next_page = self.selector.xpath('//li[contains(@class, "a-last")]/@class')
+        if next_page:
+            if 'a-disabled' in next_page:
                 return False
             else:
                 return True
@@ -72,14 +75,14 @@ class AmazonDispose:
             return False
 
     def getData(self, data):
-        if data and len(data) > 0:
+        if data:
             return ''.join(data).strip().replace('\n', '')
         else:
             return ''
 
     def getURLData(self, data):
-        if data and len(data) >0:
-            return '%s%s' % (getAmazonDomain(self.Country), data[0])
+        if data:
+            return '%s%s' % (getAmazonDomain(self.Country), self.getData(data))
         else:
             return ''
 
@@ -107,7 +110,7 @@ class AmazonDispose:
 
     def is_lang(self):
         lang = self.selector.xpath('//select[@id="language-type-dropdown"]')
-        if len(lang) <= 0:
+        if not lang:
             return False
         for item in lang:
             param = item.xpath('option[@selected]/@value')
