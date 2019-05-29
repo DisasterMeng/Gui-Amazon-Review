@@ -90,7 +90,7 @@ TIME_CODE = {
     'JP': '%Y年%m月%d日',
     'UK': '%d%B%Y',
     'FR': {'MapMonth': FR_MONTH, 'format': '%d%B%Y'},
-    'DE': '%d.%B%Y',
+    'DE': {'MapMonth': DE_MONTH, 'format': '%d.%B%Y'},
     'ES': {'MapMonth': ES_MONTH, 'format': '%d%B%Y', 'replace': 'de'},
     'IT': {'MapMonth': IT_MONTH, 'format': '%d%B%Y'},
     'CA': '%B%d,%Y',

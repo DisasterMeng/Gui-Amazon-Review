@@ -25,7 +25,6 @@ class AmazonDispose:
             reviewHref = review.xpath('div/div/div[2]/a[@data-hook="review-title"]/@href')
             reviewTitle = review.xpath('div/div/div[2]/a[@data-hook="review-title"]/span//text()')
             reviewStrip = review.xpath('div/div/div[3]/a[@data-hook="format-strip"]//text()')
-            print(reviewStrip)
             reviewVP = review.xpath('div/div/div[3]/span/a/span[@data-hook="avp-badge"]')
             if reviewVP:
                 reviewVP = 'vp'
@@ -99,7 +98,8 @@ class AmazonDispose:
                 time_format = time_format['format']
             time_struct = time.strptime(date, time_format)
             return time.strftime(STANDARD_TIME, time_struct)
-        except [TypeError, ValueError, SyntaxError]:
+        except (TypeError, ValueError, SyntaxError) as e:
+            print(e)
             return date
 
     def is_robot(self):
