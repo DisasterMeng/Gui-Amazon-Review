@@ -40,8 +40,9 @@ class AmazonDispose:
                 reviewStars = reviewStars.group(1)
             else:
                 reviewStars = ''
-            reviewHelpful = review.xpath('div/div/div[5]/div/span[@data-hook="review-voting-widget"]'
-                                         '/div/span[@data-hook="helpful-vote-statement"]//text()')
+            reviewHelpful = review.xpath('div/div/div[contains(@class, "review-comments")]/div'
+                                         '/span[@data-hook="review-voting-widget"]/div[1]'
+                                         '/span[@data-hook="helpful-vote-statement"]//text()')
             reviewHelpful = re.search(HELPFUL, self.getData(reviewHelpful))
             if reviewHelpful:
                 reviewHelpful = reviewHelpful.group(1)
