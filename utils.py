@@ -84,20 +84,20 @@ DE_MONTH = {
 }
 
 TIME_CODE = {
-    'US': '%B%d,%Y',
+    'US': {'format': '%B%d,%Y', 'replace': 'Reviewed in the United States on'},
     'AE': '%B%d,%Y',
     'CN': '%Y年%m月%d日',
-    'JP': '%Y年%m月%d日',
-    'UK': '%d%B%Y',
-    'FR': {'MapMonth': FR_MONTH, 'format': '%d%B%Y'},
-    'DE': {'MapMonth': DE_MONTH, 'format': '%d.%B%Y'},
-    'ES': {'MapMonth': ES_MONTH, 'format': '%d%B%Y', 'replace': 'de'},
-    'IT': {'MapMonth': IT_MONTH, 'format': '%d%B%Y'},
-    'CA': '%B%d,%Y',
-    'IN': '%d%B%Y',
-    'AU': '%d%B%Y',
-    'GB': '%d%B%Y',
-    'MX': {'MapMonth': MX_MONTH, 'format': '%d%B%Y', 'replace': 'de'}
+    'JP': {'format': '%Y年%m月%d日', 'replace': 'に日本でレビュー済み'},
+    'UK': {'format': '%d%B%Y', 'replace': 'Reviewed in the United Kingdom on'},
+    'FR': {'MapMonth': FR_MONTH, 'format': '%d%B%Y', 'replace': 'Commenté en France le'},
+    'DE': {'MapMonth': DE_MONTH, 'format': '%d.%B%Y', 'replace': 'Rezension aus Deutschland vom'},
+    'ES': {'MapMonth': ES_MONTH, 'format': '%d%B%Y', 'replace': ['Revisado en España el', 'de']},
+    'IT': {'MapMonth': IT_MONTH, 'format': '%d%B%Y', 'replace': 'Recensito in Italia il'},
+    'CA': {'format': '%B%d,%Y', 'replace': 'Reviewed in Canada on'},
+    'IN': {'format': '%d%B%Y', 'replace': 'Reviewed in India on'},
+    'AU': {'format': '%d%B%Y', 'replace': 'Reviewed in Australia on'},
+    'GB': {'format': '%d%B%Y', 'replace': 'Reviewed in the United Kingdom on'},
+    'MX': {'MapMonth': MX_MONTH, 'format': '%d%B%Y', 'replace': ['Revisado en México el', 'de']}
     # 'SG': 'https://www.amazon.com.sg'
 }
 

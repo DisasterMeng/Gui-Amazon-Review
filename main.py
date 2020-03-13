@@ -89,7 +89,7 @@ class Application(Frame):
         self.requests = AmazonRequests(site, asin)
         self.csv = JsonCsv(asin)
         t = threading.Thread(target=self.start_download)
-        t.setDaemon(True)
+        self.daemon = t.setDaemon(True)
         t.start()
 
     def start_download(self):
@@ -102,6 +102,8 @@ class Application(Frame):
                 self.write_msg('asin不存在，请查看是否输入有误')
             if amazon_data == 2:
                 self.write_msg('请求失败')
+            if amazon_data == 400:
+                self.write_msg('服务器无法理解此请求')
             self.startButton.config(state=NORMAL)
             return
         self.write_msg('正在解析数据')

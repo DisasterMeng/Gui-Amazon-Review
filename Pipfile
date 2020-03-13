@@ -7,9 +7,9 @@ verify_ssl = true
 
 [packages]
 requests = "*"
-fake-useragent = "*"
 lxml = "*"
 pyinstaller = "*"
+fake-useragent = "*"
 
 [requires]
 python_version = "3.6"
