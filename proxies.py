@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 from utils import request_message, getAmazonDomain, is_robot, wait, amazon_headers
 
-MAX_PROXY_REQUESTS_NUM = 3
+MAX_PROXY_REQUESTS_NUM = 2
 
 SCANNING_TIME = 0
 
@@ -91,7 +91,7 @@ class Proxy:
                 return self.agent_pool(country, proxy_num)
             else:
                 print('请求代理失败, 重试已达最大次数')
-                return None
+                return response
 
     def amazon_robot_check(self, data, country):
         print('正在进行amazon机器人验证')
@@ -159,11 +159,10 @@ class Proxy:
                 return agent['session'], agent['proxies']
             else:
                 results = self.agent_pool(country, proxy_num=1)
-                if results:
+                if results and type(results) == list:
                     agent = random.choice(results[country])
                     return agent['session'], agent['proxies']
-                wait()
-                return self.get_proxies(country)
+                return None, results
         else:
             return self.agent_pool()
 
