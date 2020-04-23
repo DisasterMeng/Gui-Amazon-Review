@@ -108,11 +108,8 @@ class AmazonDispose:
             print(e)
             return date
 
-    def is_robot(self):
-        robot = self.selector.xpath('//form[@action="/errors/validateCaptcha"]')
-        if robot:
-            return True
-        return False
+    def get_selector(self):
+        return self.selector
 
     def is_lang(self):
         lang = self.selector.xpath('//select[@id="language-type-dropdown"]')

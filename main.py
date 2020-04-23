@@ -1,13 +1,15 @@
 from tkinter import *
 from tkinter import ttk
+
 import random
 import time
 import threading
 
+from proxies import Proxy
 from export import JsonCsv
 from request import AmazonRequests
 from dispose import AmazonDispose
-from utils import is_number, RESOURCE
+from utils import is_number, RESOURCE, is_robot
 
 
 class Application(Frame):
@@ -32,6 +34,13 @@ class Application(Frame):
         self.fm2_right = Frame(self.fm2)
         self.fm2_left_top = Frame(self.fm2_left)
         self.fm2_left_bottom = Frame(self.fm2_left)
+        self.fm2_right_top = Frame(self.fm2_right)
+        self.fm2_right_bottom = Frame(self.fm2_right)
+
+        self.is_proxies = BooleanVar()
+        self.checkbutton = Checkbutton(self.fm2_right, text='是否使用代理', variable=self.is_proxies, onvalue=True,
+                                       offvalue=False)
+        self.checkbutton.pack(side=LEFT, padx=5)
 
         self.siteLabel = Label(self.fm2_left_top, text='站点')
         self.siteLabel.pack(side=LEFT, padx=10)
@@ -52,7 +61,7 @@ class Application(Frame):
 
         self.startButton = Button(self.fm2_right, text='开始获取', command=self.start)
         self.startButton.pack()
-        self.fm2_right.pack(side=LEFT, padx=10)
+        self.fm2_right.pack(side=LEFT, padx=5)
 
         self.fm2.pack(side=TOP, pady=10)
 
@@ -85,8 +94,15 @@ class Application(Frame):
             self.startButton.config(state=NORMAL)
             return
         self.write_msg('开始任务...，站点--{}，Asin--{}'.format(site, asin))
+        if not self.is_proxies:
+            self.write_msg('不使用代理')
+            proxies = None
+            session = None
+        else:
+            self.write_msg('使用代理, 正在准备代理')
+            session, proxies = Proxy().get_proxies(site)
         #初始化请求类
-        self.requests = AmazonRequests(site, asin)
+        self.requests = AmazonRequests(site, asin, session, proxies)
         self.csv = JsonCsv(asin)
         t = threading.Thread(target=self.start_download)
         self.daemon = t.setDaemon(True)
@@ -108,7 +124,7 @@ class Application(Frame):
             return
         self.write_msg('正在解析数据')
         dispose = AmazonDispose(amazon_data, self.siteBox.get(), self.asinEntry.get())
-        if dispose.is_robot():
+        if is_robot(dispose.get_selector()):
             self.write_msg('机器人验证')
             self.startButton.config(state=NORMAL)
             return

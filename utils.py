@@ -1,3 +1,5 @@
+import time
+import random
 import winreg
 
 RESOURCE = {
@@ -126,3 +128,39 @@ def is_number(s):
     except (TypeError, ValueError):
         pass
     return False
+
+
+amazon_headers = {
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;'
+              'q=0.8,application/signed-exchange;v=b3',
+    # 'Host': getAmazonDomain(self.Country),
+    'referer': '',
+    'accept-encoding': 'gzip, deflate, br',
+    'accept-language': 'zh-CN,zh;q=0.9',
+    'upgrade-insecure-requests': '1',
+    'sec-fetch-mode': 'navigate',
+    'sec-fetch-site': 'none',
+    'sec-fetch-user': '?1',
+    'Connection': 'keep-alive'
+}
+
+
+def is_robot(selector):
+    robot = selector.xpath('//form[@action="/errors/validateCaptcha"]')
+    return True if robot else False
+
+
+def wait():
+    random_time = random.randint(1, 3)
+    print('等待时间 %s' % random_time)
+    time.sleep(random_time)
+
+
+def request_message(response, mode):
+    print(response.status_code)
+    if response.status_code != 200:
+        return None
+    if mode == 'json':
+        return response.json()
+    elif mode == 'txt':
+        return response.text
