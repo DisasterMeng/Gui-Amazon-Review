@@ -101,8 +101,8 @@ class Application(Frame):
         else:
             self.write_msg('使用代理, 正在准备代理')
             session, proxies = Proxy().get_proxies(site)
-            if not proxies or type(proxies) == dict:
-                self.write_msg('代理获取失败, 原因: {}'.format(proxies['msg'] if proxies else '无'))
+            if not proxies or type(proxies) != dict:
+                self.write_msg('代理获取失败, 原因: {}'.format(proxies['msg'] if proxies and 'msg' in proxies else '无'))
                 self.startButton.config(state=NORMAL)
                 return
         #初始化请求类

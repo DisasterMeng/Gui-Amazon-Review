@@ -3,8 +3,10 @@ import requests
 import threading
 
 from lxml import etree
+from queue import Queue
 from threading import Timer
 from fake_useragent import UserAgent
+from multiprocessing import cpu_count
 from datetime import datetime, timedelta
 
 from utils import request_message, getAmazonDomain, is_robot, wait, amazon_headers
@@ -54,11 +56,11 @@ class Proxy:
         self.add_agent()
         timer(self)
 
-    def agent_pool(self, country=None, proxy_num=3):
+    def agent_pool(self, country=None, proxy_num=1):
         proxies_array = []
         print('开始请求代理')
-        session, response = self.request(requests.session(), proxy_url.format(num=proxy_num if country else 1),
-                                         types='json')
+        session, response = self.request(requests.session(), proxy_url
+                                         .format(num=min(proxy_num, cpu_count()) if country else 1), types='json')
         if 'success' in response and response['success']:
             print('请求代理成功')
             self.proxies_num = 0
@@ -71,13 +73,23 @@ class Proxy:
             if country:
                 print('有国家参数, 进行amazon访问处理，判断ip是否有效')
                 proxies_data = {}
+                thread_list = []
+                q = Queue()
                 for proxies_item in proxies_array:
-                    results = self.amazon_robot_check(proxies_item, country)
+                    t = threading.Thread(target=self.amazon_robot_check, args=(proxies_item, country, q))
+                    t.setDaemon(True)
+                    thread_list.append(t)
+                    t.start()
+
+                for thread_item in thread_list:
+                    thread_item.join()
+                    results = q.get()
                     if results:
                         if country in proxies_data:
                             proxies_data[country].append(results)
                         else:
                             proxies_data[country] = [results]
+
                 print('获取有效代理对象: ', proxies_data if proxies_data else None)
                 return proxies_data if proxies_data else None
             else:
@@ -93,7 +105,7 @@ class Proxy:
                 print('请求代理失败, 重试已达最大次数')
                 return response
 
-    def amazon_robot_check(self, data, country):
+    def amazon_robot_check(self, data, country, q):
         print('正在进行amazon机器人验证')
         try:
             cur_header = amazon_headers.copy()
@@ -102,12 +114,13 @@ class Proxy:
                                              proxies=data['proxies'])
             if not is_robot(etree.HTML(response)):
                 data['session'] = session
-                return data
+                q.put(data)
             else:
-                return None
+                print('机器人验证')
+                q.put(None)
         except Exception as e:
             print(e)
-            return None
+            q.put(None)
 
     def add_agent(self):
         # add_agent_arr 需要添加代理的国家
@@ -159,10 +172,11 @@ class Proxy:
                 return agent['session'], agent['proxies']
             else:
                 results = self.agent_pool(country, proxy_num=1)
-                if results and type(results) == list:
+                if results:
                     agent = random.choice(results[country])
                     return agent['session'], agent['proxies']
-                return None, results
+                wait()
+                return self.get_proxies(country)
         else:
             return self.agent_pool()
 
