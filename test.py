@@ -1,7 +1,10 @@
+import asyncio
 import requests
 from lxml import etree
 from dispose import AmazonDispose
 from request import AmazonRequests
+from fake_useragent import UserAgent
+from utils import request_message, getAmazonDomain, is_robot, amazon_headers
 
 
 def test():
@@ -38,5 +41,35 @@ def test2():
     print(response.text)
 
 
+def request(session, url, headers=None, proxies=None, types='txt'):
+    response = session.get(url, headers=headers, proxies=proxies, timeout=20)
+    response.encoding = 'utf-8'
+    return session, request_message(response, types)
+
+
+def amazon_robot_check(country):
+    print('正在进行amazon机器人验证')
+    cur_header = amazon_headers.copy()
+    cur_header['user-agent'] = UserAgent().random
+    session, response = request(requests.session(), getAmazonDomain(country), headers=cur_header)
+    if not is_robot(etree.HTML(response)):
+        print('没有机器人验证')
+        return True
+    else:
+        print('机器人验证')
+        return False
+
+
+async def test3():
+    loop = asyncio.get_event_loop()
+    future = loop.run_in_executor(None, amazon_robot_check, 'US')
+    response = await future
+    print(response)
+
+
 if __name__ == '__main__':
-    test2()
+    # test2()
+    loop = asyncio.get_event_loop()
+    task = asyncio.ensure_future(test3())
+    loop.run_until_complete(task)
+    print(task.result())

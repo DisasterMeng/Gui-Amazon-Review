@@ -94,17 +94,24 @@ class Application(Frame):
             self.startButton.config(state=NORMAL)
             return
         self.write_msg('开始任务...，站点--{}，Asin--{}'.format(site, asin))
-        if not self.is_proxies:
+        if not self.is_proxies.get():
             self.write_msg('不使用代理')
             proxies = None
             session = None
         else:
             self.write_msg('使用代理, 正在准备代理')
-            session, proxies = Proxy().get_proxies(site)
-            if not proxies or type(proxies) != dict:
-                self.write_msg('代理获取失败, 原因: {}'.format(proxies['msg'] if proxies and 'msg' in proxies else '无'))
+            try:
+                session, proxies = Proxy(self).get_proxies(site)
+                if not proxies or type(proxies) != dict:
+                    self.write_msg('代理获取失败, 原因: {}'.format(proxies['msg'] if proxies and 'msg' in proxies else '无'))
+                    self.startButton.config(state=NORMAL)
+                    return
+            except Exception as e:
+                print(e)
+                self.write_msg('出现错误, 原因: {}'.format(e))
                 self.startButton.config(state=NORMAL)
                 return
+
         #初始化请求类
         self.requests = AmazonRequests(site, asin, session, proxies)
         self.csv = JsonCsv(asin)

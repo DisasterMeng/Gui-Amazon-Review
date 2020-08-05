@@ -1,9 +1,9 @@
 import random
+import asyncio
 import requests
 import threading
 
 from lxml import etree
-from queue import Queue
 from threading import Timer
 from fake_useragent import UserAgent
 from multiprocessing import cpu_count
@@ -43,26 +43,28 @@ proxies_mate = 'https://{host}:{port}'
 class Proxy:
     _instance_lock = threading.Lock()
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, application):
         if not hasattr(cls, '_instance'):
             with Proxy._instance_lock:
                 if not hasattr(cls, '_instance'):
                     Proxy._instance = super().__new__(cls)
         return Proxy._instance
 
-    def __init__(self):
+    def __init__(self, application):
+        self.application = application
         self.agents = {}
         self.proxies_num = 0
-        self.add_agent()
-        timer(self)
+        self.loop = asyncio.get_event_loop()
+        # self.add_agent()
+        # timer(self)
 
-    def agent_pool(self, country=None, proxy_num=1):
+    async def agent_pool(self, country=None, proxy_num=1):
         proxies_array = []
-        print('开始请求代理')
+        self.application.write_msg('开始请求代理')
         session, response = self.request(requests.session(), proxy_url
                                          .format(num=min(proxy_num, cpu_count()) if country else 1), types='json')
         if 'success' in response and response['success']:
-            print('请求代理成功')
+            self.application.write_msg('请求代理成功')
             self.proxies_num = 0
             for item in response['data']:
                 proxies = {
@@ -71,56 +73,45 @@ class Proxy:
                 }
                 proxies_array.append({'session': session, 'proxies': proxies, 'expire_time': item['expire_time']})
             if country:
+                self.application.write_msg('有国家参数, 进行amazon访问处理，判断ip是否有效')
                 print('有国家参数, 进行amazon访问处理，判断ip是否有效')
                 proxies_data = {}
-                thread_list = []
-                q = Queue()
                 for proxies_item in proxies_array:
-                    t = threading.Thread(target=self.amazon_robot_check, args=(proxies_item, country, q))
-                    t.setDaemon(True)
-                    thread_list.append(t)
-                    t.start()
-
-                for thread_item in thread_list:
-                    thread_item.join()
-                    results = q.get()
+                    future = self.loop.run_in_executor(None, self.amazon_robot_check, proxies_item, country)
+                    results = await future
                     if results:
                         if country in proxies_data:
                             proxies_data[country].append(results)
                         else:
                             proxies_data[country] = [results]
-
+                self.application.write_msg('代理: {}'.format(proxies_data if proxies_data else '代理无效'))
                 print('获取有效代理对象: ', proxies_data if proxies_data else None)
                 return proxies_data if proxies_data else None
             else:
+                self.application.write_msg('无国家参数, 不需要处理, 直接返回代理')
                 print('无国家参数, 不需要处理, 直接返回代理')
                 return proxies_array.pop()
         else:
             self.proxies_num += 1
-            print('请求代理失败, 正在重试...重试次数为: ', self.proxies_num)
+            self.application.write_msg('请求代理失败, 正在重试...重试次数为: ', self.proxies_num)
             if self.proxies_num < MAX_PROXY_REQUESTS_NUM:
                 wait()
-                return self.agent_pool(country, proxy_num)
+                task = asyncio.ensure_future(self.agent_pool(country, proxy_num))
+                self.loop.run_until_complete(task)
+                return task.result()
             else:
+                self.application.write_msg('请求代理失败, 重试已达最大次数')
                 print('请求代理失败, 重试已达最大次数')
                 return response
 
-    def amazon_robot_check(self, data, country, q):
+    def amazon_robot_check(self, data, country):
         print('正在进行amazon机器人验证')
-        try:
-            cur_header = amazon_headers.copy()
-            cur_header['user-agent'] = UserAgent().random
-            session, response = self.request(data['session'], getAmazonDomain(country), headers=cur_header,
-                                             proxies=data['proxies'])
-            if not is_robot(etree.HTML(response)):
-                data['session'] = session
-                q.put(data)
-            else:
-                print('机器人验证')
-                q.put(None)
-        except Exception as e:
-            print(e)
-            q.put(None)
+        cur_header = amazon_headers.copy()
+        cur_header['user-agent'] = UserAgent().random
+        session, response = self.request(data['session'], getAmazonDomain(country), headers=cur_header,
+                                         proxies=data['proxies'])
+        data['session'] = session
+        return data if not is_robot(etree.HTML(response)) else None
 
     def add_agent(self):
         # add_agent_arr 需要添加代理的国家
@@ -136,7 +127,9 @@ class Proxy:
         if add_agent_arr:
             print('代理需要添加的国家有: ', ','.join([item['country'] for item in add_agent_arr]))
             for item in add_agent_arr:
-                results = self.agent_pool(item['country'], item['proxy_num'])
+                task = asyncio.ensure_future(self.agent_pool(item['country'], item['proxy_num']))
+                self.loop.run_until_complete(task)
+                results = task.result()
                 if results:
                     if item['country'] in self.agents:
                         self.agents[item['country']].extend(results[item['country']])
@@ -171,14 +164,18 @@ class Proxy:
                     return self.get_proxies(country)
                 return agent['session'], agent['proxies']
             else:
-                results = self.agent_pool(country, proxy_num=1)
+                task = asyncio.ensure_future(self.agent_pool(country, proxy_num=1))
+                self.loop.run_until_complete(task)
+                results = task.result()
                 if results:
                     agent = random.choice(results[country])
                     return agent['session'], agent['proxies']
                 wait()
                 return self.get_proxies(country)
         else:
-            return self.agent_pool()
+            task = asyncio.ensure_future(self.agent_pool())
+            self.loop.run_until_complete(task)
+            return task.result()
 
     @staticmethod
     def request(session, url, headers=None, proxies=None, types='txt'):
