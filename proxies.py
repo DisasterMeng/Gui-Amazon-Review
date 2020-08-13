@@ -93,7 +93,7 @@ class Proxy:
                 return proxies_array.pop()
         else:
             self.proxies_num += 1
-            self.application.write_msg('请求代理失败, 正在重试...重试次数为: ', self.proxies_num)
+            self.application.write_msg('请求代理失败, 正在重试...重试次数为: {}'.format(self.proxies_num))
             if self.proxies_num < MAX_PROXY_REQUESTS_NUM:
                 wait()
                 task = asyncio.ensure_future(self.agent_pool(country, proxy_num))
