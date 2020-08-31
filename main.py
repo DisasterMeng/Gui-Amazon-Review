@@ -33,6 +33,7 @@ class Application(Frame):
         self.fm2_left = Frame(self.fm2)
         self.fm2_right = Frame(self.fm2)
         self.fm2_left_top = Frame(self.fm2_left)
+        self.fm2_left_center = Frame(self.fm2_left)
         self.fm2_left_bottom = Frame(self.fm2_left)
         self.fm2_right_top = Frame(self.fm2_right)
         self.fm2_right_bottom = Frame(self.fm2_right)
@@ -51,11 +52,21 @@ class Application(Frame):
         self.siteBox.current(0)
         self.fm2_left_top.pack(side=TOP, pady=5)
 
-        self.asinLabel = Label(self.fm2_left_bottom, text='asin')
+        self.asinLabel = Label(self.fm2_left_center, text='asin')
         self.asinLabel.pack(side=LEFT, padx=10)
 
-        self.asinEntry = Entry(self.fm2_left_bottom)
+        self.asinEntry = Entry(self.fm2_left_center)
         self.asinEntry.pack(side=LEFT)
+        self.fm2_left_center.pack(side=TOP, pady=5)
+
+        self.pageLabel = Label(self.fm2_left_bottom, text='页码')
+        self.pageLabel.pack(side=LEFT, padx=10)
+
+        pageValue = StringVar()
+        pageValue.set('1')
+
+        self.pageEntry = Entry(self.fm2_left_bottom, textvariable=pageValue)
+        self.pageEntry.pack(side=LEFT)
         self.fm2_left_bottom.pack(side=TOP, pady=5)
         self.fm2_left.pack(side=LEFT)
 
@@ -89,8 +100,20 @@ class Application(Frame):
         self.startButton.config(state=DISABLED)
         site = self.siteBox.get()
         asin = self.asinEntry.get()
+        page = self.pageEntry.get()
         if not asin:
-            self.write_msg('asin 为空，请先输入asin')
+            self.write_msg('asin 为空，请输入asin')
+            self.startButton.config(state=NORMAL)
+            return
+        if not page:
+            self.write_msg('页码 为空, 请输入页码')
+            self.startButton.config(state=NORMAL)
+            return
+        try:
+            page = int(page)
+        except Exception as e:
+            print(e)
+            self.write_msg('出现错误, 原因: 页码不是数字')
             self.startButton.config(state=NORMAL)
             return
         self.write_msg('开始任务...，站点--{}，Asin--{}'.format(site, asin))
@@ -113,7 +136,7 @@ class Application(Frame):
                 return
 
         #初始化请求类
-        self.requests = AmazonRequests(site, asin, session, proxies)
+        self.requests = AmazonRequests(site, asin, page, session, proxies)
         self.csv = JsonCsv(asin)
         t = threading.Thread(target=self.start_download)
         self.daemon = t.setDaemon(True)

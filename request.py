@@ -15,12 +15,12 @@ reviewParam = {
 
 
 class AmazonRequests:
-    def __init__(self, country, asin, session, proxies):
+    def __init__(self, country, asin, page, session, proxies):
         self.session = session if session else requests.session()
         self.proxies = proxies
         self.ASIN = asin
         self.Country = country
-        self.page = 1
+        self.page = page
         self.retryNum = 0
         self.referer = getAmazonDomain(self.Country)
         self.headers = amazon_headers.copy()
