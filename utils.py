@@ -20,6 +20,40 @@ RESOURCE = {
     # 'SG': 'https://www.amazon.com.sg'
 }
 
+REVIEW_COUNTRY = {
+    'US': r'Reviewed in the (.*) on',
+    'AE': None,
+    'CN': r'已在(.*)亚马逊上发表',
+    'JP': r'に(.*)でレビュー済み',
+    'UK': r'Reviewed in the (.*) on',
+    'FR': r'Commenté en (.*) le',
+    'DE': r'Rezension aus (.*) vom',
+    'ES': r'Revisado en (.*) e',
+    'IT': r'Recensito in (.*) il',
+    'CA': r'Reviewed in (.*) on',
+    'IN': r'Reviewed in (.*) on',
+    'AU': r'Reviewed in (.*) on',
+    'GB': r'Reviewed in the (.*) on',
+    'MX': r'Reseñado en los (.*) el'
+}
+
+REVIEW_HELPFUL = {
+    'US': 'One',
+    'AE': 'One',
+    'CN': None,
+    'JP': None,
+    'UK': 'One',
+    'FR': 'Une',
+    'DE': 'Eine',
+    'ES': 'Una',
+    'IT': 'Una',
+    'CA': 'One',
+    'IN': 'One',
+    'AU': 'One',
+    'GB': 'One',
+    'MX': 'Una'
+}
+
 LANG_CODE = {
     'CN': 'zh_CN',
     'US': 'en_US'
@@ -86,20 +120,20 @@ DE_MONTH = {
 }
 
 TIME_CODE = {
-    'US': {'format': '%B%d,%Y', 'replace': 'Reviewed in the United States on'},
+    'US': {'format': '%B%d,%Y', 'replace': r'Reviewed in the (.*) on'},
     'AE': '%B%d,%Y',
     'CN': '%Y年%m月%d日',
-    'JP': {'format': '%Y年%m月%d日', 'replace': 'に日本でレビュー済み'},
-    'UK': {'format': '%d%B%Y', 'replace': 'Reviewed in the United Kingdom on'},
-    'FR': {'MapMonth': FR_MONTH, 'format': '%d%B%Y', 'replace': 'Commenté en France le'},
-    'DE': {'MapMonth': DE_MONTH, 'format': '%d.%B%Y', 'replace': 'Rezension aus Deutschland vom'},
-    'ES': {'MapMonth': ES_MONTH, 'format': '%d%B%Y', 'replace': ['Revisado en España el', 'de']},
-    'IT': {'MapMonth': IT_MONTH, 'format': '%d%B%Y', 'replace': 'Recensito in Italia il'},
-    'CA': {'format': '%B%d,%Y', 'replace': 'Reviewed in Canada on'},
-    'IN': {'format': '%d%B%Y', 'replace': 'Reviewed in India on'},
-    'AU': {'format': '%d%B%Y', 'replace': 'Reviewed in Australia on'},
-    'GB': {'format': '%d%B%Y', 'replace': 'Reviewed in the United Kingdom on'},
-    'MX': {'MapMonth': MX_MONTH, 'format': '%d%B%Y', 'replace': ['Revisado en México el', 'de']}
+    'JP': {'format': '%Y年%m月%d日', 'replace': r'に(.*)でレビュー済み'},
+    'UK': {'format': '%d%B%Y', 'replace': r'Reviewed in the (.*) on'},
+    'FR': {'MapMonth': FR_MONTH, 'format': '%d%B%Y', 'replace': r'Commenté en (.*) le'},
+    'DE': {'MapMonth': DE_MONTH, 'format': '%d.%B%Y', 'replace': r'Rezension aus (.*) vom'},
+    'ES': {'MapMonth': ES_MONTH, 'format': '%d%B%Y', 'replace': [r'Revisado en (.*) el', 'de']},
+    'IT': {'MapMonth': IT_MONTH, 'format': '%d%B%Y', 'replace': r'Recensito in (.*) il'},
+    'CA': {'format': '%B%d,%Y', 'replace': r'Reviewed in (.*) on'},
+    'IN': {'format': '%d%B%Y', 'replace': r'Reviewed in (.*) on'},
+    'AU': {'format': '%d%B%Y', 'replace': r'Reviewed in (.*) on'},
+    'GB': {'format': '%d%B%Y', 'replace': r'Reviewed in the (.*) on'},
+    'MX': {'MapMonth': MX_MONTH, 'format': '%d%B%Y', 'replace': [r'Revisado en (.*) el', 'de']}
     # 'SG': 'https://www.amazon.com.sg'
 }
 

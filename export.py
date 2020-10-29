@@ -2,8 +2,9 @@ import os, time, csv
 
 from utils import getDesktopPath
 
-NEED = ('asin', 'name', 'format', 'vp', 'date', 'stars', 'title', 'content', 'href', 'buyer', 'helpful')
-NEEDDOC = ('ASIN', '评价人', '格式条', '是否vp', '日期', '星级', '标题', '内容', '评论链接', '买家链接', '点赞数')
+NEED = ('asin', 'name', 'format', 'vp', 'review_country', 'date', 'stars', 'title', 'content', 'href', 'buyer',
+        'helpful')
+NEEDDOC = ('ASIN', '评价人', '格式条', '是否vp', '评论国家', '日期', '星级', '标题', '内容', '评论链接', '买家链接', '点赞数')
 FILENAME = "Amazon_{asin}_Review_%Y_%m_%d_%H_%M.csv"
 
 
