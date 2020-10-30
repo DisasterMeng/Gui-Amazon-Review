@@ -15,7 +15,7 @@
 
 最后建议一下，简单的页面可以是用tkinter，复杂可以使用其他Gui库，比如pyqt，tkinter实现复杂的页面有点费劲。
 
-下载地址[https://github.com/DisasterMeng/Gui-Amazon-Review/releases/download/1.0/Amazon-Review_1.0.exe](https://github.com/DisasterMeng/Gui-Amazon-Review/releases/download/1.0/Amazon-Review_1.0.exe)
+下载地址[https://github.com/DisasterMeng/Gui-Amazon-Review/releases/download/1.6/Amazon-Review_1.6.exe](https://github.com/DisasterMeng/Gui-Amazon-Review/releases/download/1.6/Amazon-Review_1.6.exe)
 
 源码地址[https://github.com/DisasterMeng/Gui-Amazon-Review](https://github.com/DisasterMeng/Gui-Amazon-Review)，求星星😊
 
