@@ -43,9 +43,9 @@ class AmazonDispose:
             reviewHelpful = review.xpath('div/div/div[contains(@class, "review-comments")]/div'
                                          '/span[@data-hook="review-voting-widget"]/div[1]'
                                          '/span[@data-hook="helpful-vote-statement"]//text()')
-            reviewHelpful = re.search(HELPFUL, self.getData(reviewHelpful))
+            re_review_helpful = re.search(HELPFUL, self.getData(reviewHelpful))
 
-            reviewHelpful = reviewHelpful.group(1) if reviewHelpful else self.get_helpful(reviewHelpful)
+            reviewHelpful = re_review_helpful.group(1) if re_review_helpful else self.get_helpful(reviewHelpful)
 
             reviewContent = review.xpath('div/div/div[4]/span[@data-hook="review-body"]//text()')
             # print(self.get_date(reviewDate))
